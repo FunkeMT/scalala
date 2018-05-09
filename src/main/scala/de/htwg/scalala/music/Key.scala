@@ -1,23 +1,22 @@
 package de.htwg.scalala.music
 
-import de.htwg.scalala.midi.MidiPlayer
-import scala.concurrent.duration._
 import scala.language.postfixOps
 
 case class Key(
     val midiNumber: Int,
     repeat: Int = 1,
     pattern: Pattern = Pattern(1),
-    ticks:Int = 4,
-    volume: Int = Context.volume) extends MusicElem {
+    ticks: Int = 4,
+    volume: Int = Context.volume
+) extends MusicElem {
   require(0 <= midiNumber && midiNumber <= 128)
   require(0 <= volume && volume <= 100)
 
-  def play(instrument: Instrument = Piano, volume:Int=volume): Unit = for (i <- 1 to repeat; part <- pattern) {
-    instrument.midiPlayer.play(key = midiNumber, duration = duration, volume=volume*part)
+  def play(instrument: Instrument = Piano, volume: Int = volume): Unit = for (i <- 1 to repeat; part <- pattern) {
+    instrument.midiPlayer.play(key = midiNumber, duration = duration, volume = volume * part)
   }
-  def toTickList:List[Option[Music]] = {
-      (1 to repeat).toList.flatMap(x=> pattern.flatMap(part=>Some(this.copy(volume=volume*part))::((1 until ticks).toList.map(x=>None))))
+  def toTickList: List[Option[Music]] = {
+    (1 to repeat).toList.flatMap(x => pattern.flatMap(part => Some(this.copy(volume = volume * part)) :: ((1 until ticks).toList.map(x => None))))
   }
 
   def *(pattern: Pattern): Key = copy(pattern = pattern)
@@ -44,11 +43,11 @@ case class Key(
 
   def chord(chordQuality: ChordQuality.Value): Chord = {
     chordQuality match {
-      case ChordQuality.Major        => Chord(Set(this, majorTerz, majorQuint), name = toString.toUpperCase() + "maj")
-      case ChordQuality.Minor        => Chord(Set(this, minorTerz, majorQuint), name = toString.toUpperCase() + "min")
-      case ChordQuality.Diminshed    => Chord(Set(this, minorTerz, minorQuint), name = toString.toUpperCase() + "dim")
-      case ChordQuality.Augmented    => Chord(Set(this, majorTerz, augmentedQuint), name = toString.toUpperCase() + "aug")
-      case ChordQuality.Seventh      => Chord(Set(this, majorTerz, majorQuint, minorSetp), name = toString.toUpperCase() + "7")
+      case ChordQuality.Major => Chord(Set(this, majorTerz, majorQuint), name = toString.toUpperCase() + "maj")
+      case ChordQuality.Minor => Chord(Set(this, minorTerz, majorQuint), name = toString.toUpperCase() + "min")
+      case ChordQuality.Diminshed => Chord(Set(this, minorTerz, minorQuint), name = toString.toUpperCase() + "dim")
+      case ChordQuality.Augmented => Chord(Set(this, majorTerz, augmentedQuint), name = toString.toUpperCase() + "aug")
+      case ChordQuality.Seventh => Chord(Set(this, majorTerz, majorQuint, minorSetp), name = toString.toUpperCase() + "7")
       case ChordQuality.MajorSeventh => Chord(Set(this, majorTerz, majorQuint, majorSetp), name = toString.toUpperCase() + "maj7")
       case ChordQuality.MinorSeventh => Chord(Set(this, minorTerz, majorQuint, minorSetp), name = toString.toUpperCase() + "min7")
     }
@@ -68,9 +67,9 @@ case class Key(
   def aug: Chord = chord(ChordQuality.Augmented)
   def maj7 = chord(ChordQuality.MajorSeventh)
   def min7 = chord(ChordQuality.MinorSeventh)
-  
-  def scale(scaleType: ScaleType.Value = ScaleType.Major) = Scale(this,scaleType)
-    
+
+  def scale(scaleType: ScaleType.Value = ScaleType.Major) = Scale(this, scaleType)
+
   val keynumberToString = Map(
     0 -> "c",
     1 -> "c\u266F",
@@ -83,7 +82,8 @@ case class Key(
     8 -> "g\u266F",
     9 -> "a",
     10 -> "a\u266F",
-    11 -> "b")
+    11 -> "b"
+  )
   val octaveToString = Map(
     -1 -> ",,,,,",
     0 -> ",,,,",
@@ -95,7 +95,8 @@ case class Key(
     6 -> "\"",
     7 -> "\"'",
     8 -> "\"\"",
-    9 -> "\"\"'")
+    9 -> "\"\"'"
+  )
   val ticksToString = Map(
     16 -> "\u1D15D",
     12 -> "\u00BD\u00B7",
@@ -105,13 +106,14 @@ case class Key(
     3 -> "1/8\u00B7",
     2 -> "1/8",
     1 -> "1/16",
-    0 -> "|")
+    0 -> "|"
+  )
 
   override def toString = if (midiNumber == 128) "|" else if (volume == 0) "-" else keynumberToString(keynumber) + octaveToString(octave) + ticksToString(ticks)
   override def equals(that: Any): Boolean =
     that match {
       case that: Key => (this.midiNumber == that.midiNumber) && (this.ticks == that.ticks)
-      case _         => false
+      case _ => false
     }
 }
 

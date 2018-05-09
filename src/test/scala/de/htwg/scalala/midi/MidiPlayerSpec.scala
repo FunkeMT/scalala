@@ -32,7 +32,7 @@ class MidiPlayerSpec extends WordSpec {
       midiplayer.play(60, 100 milliseconds)
       Thread.sleep(200)
     }
-    
+
   }
 
 }

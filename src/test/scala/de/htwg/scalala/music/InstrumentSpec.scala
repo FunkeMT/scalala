@@ -8,7 +8,7 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class InstrumentSpec extends WordSpec {
-  
+
   "The most common Instruments" should {
     "readily be available if package music is imported" in {
       Piano.play(c16)
@@ -23,9 +23,9 @@ class InstrumentSpec extends WordSpec {
       c16.play(Piano)
       (d16.maj).play(Violin)
       Line(e16, f16, g16).play(Cello)
-      Line(c16.dur, d16.mol, e16.mol, f.dur).play(Bass) 
+      Line(c16.dur, d16.mol, e16.mol, f.dur).play(Bass)
     }
-    
+
   }
-  
+
 }

@@ -1,9 +1,9 @@
 package de.htwg.scalala.music
 
-case class Scale(base: Key, scaleType: ScaleType.Value = ScaleType.Major)  extends MusicSeq{
-  
-  override val seq: Vector[Key] = ScaleType.scaleVector(scaleType).map(i => base.copy(midiNumber=base.midiNumber + i))
-  override def toString = base .toString + "Scale"
+case class Scale(base: Key, scaleType: ScaleType.Value = ScaleType.Major) extends MusicSeq {
+
+  override val seq: Vector[Key] = ScaleType.scaleVector(scaleType).map(i => base.copy(midiNumber = base.midiNumber + i))
+  override def toString = base.toString + "Scale"
 }
 
 object ScaleType extends Enumeration {
@@ -24,5 +24,6 @@ object ScaleType extends Enumeration {
     Aeolian -> Vector(0, 2, 3, 5, 7, 8, 10, 12),
     Locrian -> Vector(0, 1, 3, 5, 6, 8, 10, 12),
     PentatonicMinor -> Vector(0, 3, 5, 7, 10, 12),
-    PentatonicMajor -> Vector(0, 2, 4, 7, 9, 12))
+    PentatonicMajor -> Vector(0, 2, 4, 7, 9, 12)
+  )
 }
