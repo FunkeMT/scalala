@@ -80,9 +80,9 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
   }
 
   def finalFile(): Boolean = {
-    //****  set end of track (meta event) 10 ticks later  ****
+    //****  set end of track (meta event) 1 ticks later  ****
 
-    currTick += 10
+    currTick += 1
 
     mt = new MetaMessage
     val bet = Array[Byte]() // empty array
