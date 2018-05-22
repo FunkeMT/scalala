@@ -1,0 +1,23 @@
+/**
+ *      SONG:
+ *          PLAY piano NOTES c,d,e,f
+ *          PLAY guitar NOTES f,e,d,c
+ */
+
+
+Note          ::=   c | d | e | f
+
+Notes         ::=   Note
+              |     Notes,Notes
+
+Instrument    ::=   piano
+              |     guitar
+
+PlayCommand   ::=   PLAY Instrument
+
+NoteCommand   ::=   NOTES Notes
+
+Line          ::=   PlayCommand NoteCommand
+
+Program       ::=   Line
+              |     Line Program
