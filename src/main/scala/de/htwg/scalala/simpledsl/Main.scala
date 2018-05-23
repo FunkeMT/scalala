@@ -1,11 +1,11 @@
 package de.htwg.scalala.simpledsl
 
 object Main {
-  def main(args : Array[String]) {
+  def main(args: Array[String]) {
 
     val in =
       """SONG:
-        | PLAY piano NOTES c,d,e
+        | PLAY Piano NOTES c,d,e
       """.stripMargin
 
     val parser = new Reader
