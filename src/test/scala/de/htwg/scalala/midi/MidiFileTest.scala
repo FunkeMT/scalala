@@ -7,17 +7,16 @@ class MidiFileTest extends FunSuite {
 
   test("testSaveFile") {
     val myFile = new MidiFile()
-    println(myFile.currTick)
-    myFile.changeToInstrument(0)
-    println(myFile.currTick)
-    myFile.addKey(c1, 0)
-    println(myFile.currTick)
-    myFile.changeToInstrument(13, 0xC1)
-    println(myFile.currTick)
-    myFile.addKey(f1, 1)
-    println(myFile.currTick)
+
+    myFile.changeToInstrument(Piano.instrumentID, Piano.channelID)
+    myFile.addKey(c, Piano.channelID)
+    myFile.addKey(f, Piano.channelID)
+
+    myFile.changeToInstrument(Marimba.instrumentID, Marimba.channelID)
+    myFile.addKey(a, Marimba.channelID)
+    myFile.addKey(b, Marimba.channelID)
+
     myFile.finalFile()
-    println(myFile.currTick)
     myFile.saveFile()
   }
 

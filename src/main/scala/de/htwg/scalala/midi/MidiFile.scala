@@ -12,7 +12,7 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
   val NoteOFF = 0x80
 
   // Tick Counter
-  var currTick = 1
+  var tickMap = collection.mutable.Map[Int, Long]().withDefaultValue(1)
 
   //**** Create a new Sequence
   val sequence = new Sequence(javax.sound.midi.Sequence.PPQ, 24)
@@ -51,11 +51,11 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
   me = new MidiEvent(mm, 0.toLong)
   track.add(me)
 
-  def changeToInstrument(instrumentID: Int = 0, channel: Int = 0xC0): Boolean = {
+  def changeToInstrument(instrumentID: Int = 0, channel: Int = 0): Boolean = {
     //****  set instrument  ****
     mm = new ShortMessage
-    mm.setMessage(channel, instrumentID, 0x00)
-    me = new MidiEvent(mm, currTick.toLong)
+    mm.setMessage(channel + 0xC0, instrumentID, 0x00)
+    me = new MidiEvent(mm, tickMap(channel))
     track.add(me)
   }
 
@@ -65,27 +65,25 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
     //****  note on  ****
     mm = new ShortMessage
     mm.setMessage(NoteON + channel, key.midiNumber, 0x60)
-    me = new MidiEvent(mm, currTick.toLong)
+    me = new MidiEvent(mm, tickMap(channel))
     track.add(me)
 
-    currTick += key.ticks
+    tickMap(channel) += key.ticks
 
     //****  note off  ****
     mm = new ShortMessage
     mm.setMessage(NoteOFF + channel, key.midiNumber, 0x40)
-    me = new MidiEvent(mm, currTick.toLong)
+    me = new MidiEvent(mm, tickMap(channel))
     track.add(me)
   }
 
   def finalFile(): Boolean = {
     //****  set end of track (meta event) 1 ticks later  ****
 
-    currTick += 1
-
     mt = new MetaMessage
     val bet = Array[Byte]() // empty array
     mt.setMessage(0x2F, bet, 0)
-    me = new MidiEvent(mt, currTick.toLong)
+    me = new MidiEvent(mt, tickMap.max._2)
     track.add(me)
   }
 
