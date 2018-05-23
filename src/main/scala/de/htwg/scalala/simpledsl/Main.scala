@@ -6,6 +6,7 @@ object Main {
     val in =
       """SONG:
         | PLAY Piano NOTES c,d,e
+        | PLAY Guitar NOTES a,b,a,b,a,b
       """.stripMargin
 
     val parser = new Reader
@@ -15,7 +16,7 @@ object Main {
         try {
           interpreter.run
         } catch {
-          case e: RuntimeException => println(e.getMessage)
+          case e: RuntimeException => println("Error: " + e.printStackTrace())
         }
       }
       case parser.Error(msg, n) => println("Error: " + msg)

@@ -27,7 +27,7 @@ class Reader extends StandardTokenParsers {
     case p ~ n => new Line(p, n)
   }
 
-  def song: Parser[Song] = ("SONG" ~ ":") ~ line ^^ {
+  def song: Parser[Song] = ("SONG" ~ ":") ~ rep(line) ^^ {
     case l => new Song(l._2)
   }
 

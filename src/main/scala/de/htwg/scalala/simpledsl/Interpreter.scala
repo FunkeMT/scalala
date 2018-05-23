@@ -14,13 +14,21 @@ class Interpreter(song: Song) {
     midiFile.saveFile()
   }
 
-  private def walk(tree: Line) {
-    if (tree != null) {
-      println("Instrument: " + tree.instrument)
-      midiFile.changeToInstrument(tree.instrument.instrument.instrumentID)
+  private def walk(tree: List[Line]) {
+    if (!tree.isEmpty) {
+      tree.head match {
+        case Line(instrument, notes) => {
+          println("Instrument: " + instrument)
+          midiFile.changeToInstrument(instrument.instrument.instrumentID, instrument.instrument.channelID)
 
-      println("Notes:" + tree.notes)
-      tree.notes.foreach(note => midiFile.addKey(note.note))
+          println("Notes:" + notes)
+          notes.foreach(note => midiFile.addKey(note.note, instrument.instrument.channelID))
+
+
+          walk(tree.tail)
+        }
+        case _ => ()
+      }
     }
   }
 }
