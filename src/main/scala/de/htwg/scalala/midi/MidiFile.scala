@@ -28,8 +28,6 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
   //****  set tempo (meta event)  ****
   var mt = new MetaMessage
   val bt = Array(0x07, 0xA1, 0x20).map(_.toByte)
-  println(bt.size)
-  println(bt.length)
   mt.setMessage(0x51, bt, 3)
   me = new MidiEvent(mt, 0.toLong)
   track.add(me)
