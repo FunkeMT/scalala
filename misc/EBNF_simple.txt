@@ -5,13 +5,15 @@
  */
 
 
-Note          ::=   c | d | e | f
+Note          ::=   c | d | e | f | g | a | b
 
 Notes         ::=   Note
               |     Notes,Notes
 
-Instrument    ::=   piano
-              |     guitar
+Instrument    ::=   Piano
+              |     Guitar
+              |     Marimba
+              |     Trumpet
 
 PlayCommand   ::=   PLAY Instrument
 
@@ -21,3 +23,5 @@ Line          ::=   PlayCommand NoteCommand
 
 Program       ::=   Line
               |     Line Program
+
+Song          ::=   SONG: Program
