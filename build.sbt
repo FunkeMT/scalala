@@ -4,6 +4,8 @@ version       := "0.0.1-SNAPSHOT"
 scalaVersion  := "2.11.8"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
+fork in Test := true
+
 resolvers += Resolver.jcenterRepo
 
 libraryDependencies ++= {
