@@ -1,5 +1,7 @@
 package de.htwg.scalala.music
 
+import de.htwg.scalala.midi.MidiPlayer
+
 trait MusicSeq extends Music with Traversable[Music] {
   private val generator = scala.util.Random
   var repeat = 1

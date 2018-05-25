@@ -13,7 +13,7 @@ case class Key(
   require(0 <= volume && volume <= 100)
 
   def play(instrument: Instrument = Piano, volume: Int = volume): Unit = for (i <- 1 to repeat; part <- pattern) {
-    //instrument.midiPlayer.play(key = midiNumber, duration = duration, volume = volume * part)
+    instrument.midiPlayer.play(key = midiNumber, duration = duration, volume = volume * part)
   }
   def toTickList: List[Option[Music]] = {
     (1 to repeat).toList.flatMap(x => pattern.flatMap(part => Some(this.copy(volume = volume * part)) :: ((1 until ticks).toList.map(x => None))))
