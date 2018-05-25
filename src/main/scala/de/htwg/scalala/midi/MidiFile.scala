@@ -89,7 +89,7 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
 
   def saveFile(): File = {
     //****  write the MIDI sequence to a MIDI file  ****
-    var file = new File("./midifile.mid")
+    var file = new File("midifile.mid")
     MidiSystem.write(sequence, 1, file)
 
     println("MIDI-File written at: ")
