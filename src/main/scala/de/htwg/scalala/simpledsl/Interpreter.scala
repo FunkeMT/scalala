@@ -24,7 +24,6 @@ class Interpreter(song: Song) {
           println("Notes:" + notes)
           notes.foreach(note => midiFile.addKey(note.note, instrument.instrument.channelID))
 
-
           walk(tree.tail)
         }
         case _ => ()

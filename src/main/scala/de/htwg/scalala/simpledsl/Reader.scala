@@ -31,7 +31,6 @@ class Reader extends StandardTokenParsers {
     case l => new Song(l._2)
   }
 
-
   def parseAll[T](p: Parser[T], in: String): ParseResult[T] = {
     phrase(p)(new lexical.Scanner(in))
   }
