@@ -1,7 +1,5 @@
 package de.htwg.scalala.music
 
-import de.htwg.scalala.midi.MidiPlayer
-
 case class Chord(
     set: Set[Key],
     repeat: Int = 1,
@@ -11,7 +9,7 @@ case class Chord(
     name: String = ""
 ) extends MusicElem {
   def play(instrument: Instrument = Piano, volume: Int): Unit = for (i <- 1 to repeat; part <- pattern) {
-    instrument.midiPlayer.play(set, volume = volume * part)
+    //instrument.midiPlayer.play(set, volume = volume * part)
   }
   def *(_pattern: Pattern): Chord = copy(pattern = _pattern)
   def *(repetitions: Int): Chord = copy(repeat = repetitions)

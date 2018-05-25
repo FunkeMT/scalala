@@ -1,7 +1,5 @@
 package de.htwg.scalala.music
 
-import de.htwg.scalala.midi.MidiPlayer
-
 trait Symbol extends MusicElem {
   val ticks = 0
   override def play(instrument: Instrument = Piano, volume: Int) = {} // play nothing for Sympols
@@ -16,13 +14,13 @@ case class TimeSignature(nominator: Int = 4, denominator: Int = 4) extends Symbo
 }
 
 case class Pause(override val ticks: Int = 4) extends Symbol {
-  override def play(instrument: Instrument = Piano, volume: Int = 0) = instrument.midiPlayer.play(key = 1, duration = duration, volume = 0)
+  //override def play(instrument: Instrument = Piano, volume: Int = 0) = instrument.midiPlayer.play(key = 1, duration = duration, volume = 0)
   override def toString = "-"
   def toTickList = Some(this) :: ((1 until ticks).toList.map(x => None))
 }
 
 case object Bar extends Symbol {
-  override def play(instrument: Instrument = Piano, volume: Int = 0) = instrument.midiPlayer.play(key = 1, duration = duration, volume = 0)
+  //override def play(instrument: Instrument = Piano, volume: Int = 0) = instrument.midiPlayer.play(key = 1, duration = duration, volume = 0)
   override def toString = "|"
   def toTickList = List(None)
 }

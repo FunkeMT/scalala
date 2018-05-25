@@ -29,8 +29,8 @@ case class MusicActor(instrument: Instrument) extends Actor {
 
   }
   def playKey(key: Key) = {
-    instrument.midiPlayer.start(key.midiNumber, key.volume)
-    system.scheduler.scheduleOnce(Context.tickduration * key.ticks) { instrument.midiPlayer.stop(key.midiNumber, key.volume) }
+    //instrument.midiPlayer.start(key.midiNumber, key.volume)
+    //system.scheduler.scheduleOnce(Context.tickduration * key.ticks) { instrument.midiPlayer.stop(key.midiNumber, key.volume) }
   }
 }
 
