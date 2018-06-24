@@ -1,3 +1,7 @@
 package de.htwg.scalala.advancedDsl
 
-case class Song(track: Track)
+import scala.collection.mutable.Map
+
+case class Song(statements: List[Statement]) {
+  val musician = Map[String, Musician]()
+}

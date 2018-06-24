@@ -7,6 +7,9 @@ import javax.sound.midi._
 
 class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
 
+  // DEFAULT VALUES
+  val TempoBPM = 120
+
   // CONTROL CHANGE MESSAGES
   val NoteON = 0x90
   val NoteOFF = 0x80
@@ -25,15 +28,8 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
   var me = new MidiEvent(sm, 0.toLong)
   track.add(me)
 
-  //****  set tempo (meta event)  ****
-  var mt = new MetaMessage
-  val bt = Array(0x07, 0xA1, 0x20).map(_.toByte)
-  mt.setMessage(0x51, bt, 3)
-  me = new MidiEvent(mt, 0.toLong)
-  track.add(me)
-
   //****  set track name (meta event)  ****
-  mt = new MetaMessage
+  var mt = new MetaMessage
   val TrackName = new String("midifile track")
   mt.setMessage(0x03, TrackName.getBytes, TrackName.length)
   me = new MidiEvent(mt, 0.toLong)
@@ -51,7 +47,22 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
   me = new MidiEvent(mm, 0.toLong)
   track.add(me)
 
-  def changeToInstrument(instrumentID: Int = 0, channel: Int = 0): Boolean = {
+  def setTempo(tempoBPM: Int = TempoBPM): Unit = {
+    //****  set tempo (meta event)  ****
+    var mt = new MetaMessage
+    //val bt = Array(0x07, 0xA1, 0x20).map(_.toByte)
+    val tempo = 60000000 / tempoBPM
+    val bt = BigInt(tempo).toByteArray
+    mt.setMessage(0x51, bt, bt.length)
+    me = new MidiEvent(mt, 0.toLong)
+    track.add(me)
+  }
+
+  def changeToInstrument(instrumentID: Int = 0, channel: Int = 0, pos: Int = 0): Boolean = {
+    //****  set tick position  ****
+    if (pos != 0) {
+      tickMap += (channel -> pos)
+    }
     //****  set instrument  ****
     mm = new ShortMessage
     mm.setMessage(channel + 0xC0, instrumentID, 0x00)

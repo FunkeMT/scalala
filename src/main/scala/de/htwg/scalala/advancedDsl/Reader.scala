@@ -20,8 +20,8 @@ class Reader extends StandardTokenParsers {
   lexical.delimiters += (",", "(", ")")
 
 
-  def song: Parser[List[Statement]] = rep(track | musician) ^^ {
-    s => s
+  def song: Parser[Song] = rep(track | musician) ^^ {
+    s => new Song(s)
   }
 
   def track: Parser[Track] = "PLAY" ~ musicVars ~ opt(tempo) ^^ {
@@ -34,7 +34,7 @@ class Reader extends StandardTokenParsers {
   }
 
   def musicVars: Parser[List[MusicVar]] = repsep(musicVar, ",") ^^ {
-    _ toList
+    m => m
   }
 
   def musicVar: Parser[MusicVar] = ident ~ opt(playAt) ^^ {
