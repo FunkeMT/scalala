@@ -37,6 +37,11 @@ class Interpreter(song: Song) {
           val note = el.asInstanceOf[Note]
           midiFile.addKey(note.note, instr.channelID)
         }
+
+        if (el.isInstanceOf[Chord]) {
+          val chord = el.asInstanceOf[Chord]
+          midiFile.addChord(chord.notes.map(_.note), instr.channelID)
+        }
       })
     }
   }

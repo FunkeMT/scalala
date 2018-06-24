@@ -70,7 +70,15 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
     track.add(me)
   }
 
-  def addKey(key: Key, channel: Int = 0): Boolean = {
+  def addChord(keys: List[Key], channel: Int = 0): Unit = {
+    keys.foreach(addKey(_, channel, true))
+  }
+
+  def addKey(key: Key, channel: Int = 0): Unit = {
+    addKey(key, channel, false)
+  }
+
+  private def addKey(key: Key, channel: Int, isChord: Boolean): Unit = {
     require(channel >= 0 && channel <= 15)
 
     //****  note on  ****
@@ -79,16 +87,23 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
     me = new MidiEvent(mm, tickMap(channel))
     track.add(me)
 
+    //println(s"1) channel: $channel | ${tickMap(channel)}")
     tickMap(channel) += key.ticks
+    //println(s"2) channel: $channel | ${tickMap(channel)}")
 
     //****  note off  ****
     mm = new ShortMessage
     mm.setMessage(NoteOFF + channel, key.midiNumber, 0x40)
     me = new MidiEvent(mm, tickMap(channel))
     track.add(me)
+
+    if (isChord) {
+      // jump back to tick origin to play chords in sync
+      tickMap(channel) -= key.ticks
+    }
   }
 
-  def finalFile(): Boolean = {
+  def finalFile(): Unit = {
     //****  set end of track (meta event) 1 ticks later  ****
 
     mt = new MetaMessage

@@ -10,11 +10,19 @@ object Main {
         |  INSTRUMENT Piano
         |  PLAYS d,e,f,g
         |
-        |MUSICIAN piano_2
+        |MUSICIAN marimba_1
         |  INSTRUMENT Marimba
-        |  PLAYS a
+        |  PLAYS CHORD(c,d,e)
         |
-        |PLAY piano_1, piano_2 AT 12, piano_2 AT 7 WITH TEMPO 50
+        |PLAY piano_1, marimba_1 AT 12, marimba_1 AT 7 WITH TEMPO 50
+      """.stripMargin
+
+    val in2 =
+      """MUSICIAN piano_1
+        |  INSTRUMENT Piano
+        |  PLAYS c,d,e,CHORD(c,d,e)
+        |
+        |PLAY piano_1 WITH TEMPO 50
       """.stripMargin
 
     val parser = new Reader
