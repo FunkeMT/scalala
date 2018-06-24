@@ -1,0 +1,157 @@
+(*
+  #### Glossar
+
+  Terminal      => no further conversion possible
+                => UPPERCASE
+                => quoted literal
+                => regex
+                => name reffering to a terminal def
+                => e.g.:
+                identifiers (names used for vars);
+                keywords (class, var, ...);
+                literals (define vals in the lang);
+                separators and delimiters;
+                whitespaces;
+                comments;
+
+  Non-Terminal  => further conversion
+                => lowercase
+                => obtained by grouping Terminals and other Non-Terminals
+                => Goal: obtain an AST --> Tree with a Non-Terminal as
+                Root that will contain another Non-Terminal ....
+
+  Production-Rule => EBNF grammar is substantially a list of production rules
+ *)
+
+ (*
+  #### Dictonary TERMINAL
+
+  INT               =>  0...9
+  STRING            =>  a...z
+  NOTE              =>  a...g
+  PARENTHESIS       =>  (...)
+  COMMA             =>  ,
+  AT                =>  'AT'
+  TEMPO             =>  'TEMPO'
+  PLAY              =>  'PLAY'
+  WITH              =>  'WITH'
+  TOGETHER          =>  'TOGETHER'
+  MUSICIAN          =>  'MUSICIAN'
+  INSTRUMENT        =>  'INSTRUMENT'
+  ISTRUMENTID       =>  'Piano' ...
+  NOTES             =>  'NOTES'
+  CHORD             =>  'CHORD'
+  PATTERN           =>  'PATTERN'
+  LOOP              =>  'LOOP'
+ *)
+
+ (*
+  #### Example
+
+  PLAY piano_1, piano_2, violine_1 AT 10, drummer_1 WITH TEMPO 80
+
+  MUSICIAN piano_1
+    INSTRUMENT Piano
+    PLAY d,e,f,g,CHORD(c,d)
+  
+  MUSICIAN piano_2
+    INSTRUMENT Piano
+    PLAY CHORD(a,b)
+  
+  MUSICIAN violine_1
+    INSTRUMENT Violine
+    PLAY c,f
+  
+  MUSICIAN drummer_1
+    INSTRUMENT HiHat
+    PLAY LOOP(c,c,c,c)
+ 
+ 
+ 
+ *)
+
+(********************** Terminals ***************************)
+
+LOOP          : 'LOOP';
+PATTERN       : 'PATTERN';
+CHORD         : 'CHORD';
+NOTES         : 'NOTES';
+INSTRUMENT    : 'INSTRUMENT';
+MUSICIAN      : 'MUSICIAN';
+TOGETHER      : 'TOGETHER';
+WITH          : 'WITH';
+PLAY          : 'PLAY';
+TEMPO         : 'TEMPO';
+AT            : 'AT';
+
+COMMA         : ',';
+LPARAN        : '(';
+RPARAN        : ')';
+
+ISTRUMENTID
+    : 'Piano' | 'Guitar' | ...
+    ;
+
+NOTE
+    : 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' 
+    ;
+
+STRING
+    : [a-z]+
+    ;
+
+INT
+    : [0-9]+
+    ;
+
+
+(********************** Non-Terminals ***********************)
+
+identifier
+    : STRING
+    ;
+
+
+
+song
+    : track
+    ;
+
+track
+    : PLAY musicVars (tempo)?
+    ;
+
+tempo
+    : WITH TEMPO INT
+    ;
+
+musicVars
+    : musicVar (COMMA musicVar)*
+    ;
+
+musicVar
+    : identifier (AT INT)?
+    ;
+
+
+
+musician
+    : MUSICIAN identifier INSTRUMENT ISTRUMENTID PLAY (noteElements | loopElements)
+    ;
+
+noteElements
+    : noteElement (COMMA noteElement)*
+    ;
+
+loopElements
+    : LOOP LPARAN noteElements RPARAN
+    ;
+
+noteElement
+    : chord
+    | NOTE
+    ;
+
+chord
+    : LPARAN NOTE NOTE (COMMA NOTE)* RPARAN
+    ;
