@@ -1,6 +1,6 @@
 package de.htwg.scalala.advancedDsl
 
-import de.htwg.scalala.music.{ Instrument => MidiInstrument, Key }
+import de.htwg.scalala.music.{ Instrument => MidiInstrument}
 
 case class Instrument(name: String) {
   val instruments = Map[String, MidiInstrument](
@@ -18,7 +18,8 @@ case class Instrument(name: String) {
     "Sax" -> MidiInstrument(name = "Sax", instrumentID = 68, channelID = 12),
     "Oboe" -> MidiInstrument(name = "Oboe", instrumentID = 69, channelID = 13),
     "Clarinet" -> MidiInstrument(name = "Clarinet", instrumentID = 72, channelID = 14),
-    "Flute" -> MidiInstrument(name = "Flute", instrumentID = 74, channelID = 15)
+    "Flute" -> MidiInstrument(name = "Flute", instrumentID = 74, channelID = 15),
+    "Drum" -> MidiInstrument(name = "Drum", instrumentID = 115, channelID = 9)
   )
 
   val instrument: MidiInstrument = instruments.get(name).orNull

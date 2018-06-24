@@ -50,7 +50,7 @@ class Reader extends StandardTokenParsers {
 
 
 
-  def musician: Parser[Musician] = ("MUSICIAN" ~> ident) ~ ("INSTRUMENT" ~> instrument) ~ ("PLAYS" ~> noteElements | loopElements) ^^ {
+  def musician: Parser[Musician] = ("MUSICIAN" ~> ident) ~ ("INSTRUMENT" ~> instrument) ~ ("PLAYS" ~> (loopElements | noteElements)) ^^ {
     case m ~ i ~ e => new Musician(m, i, e)
   }
 
@@ -81,7 +81,7 @@ class Reader extends StandardTokenParsers {
   }
 
   def note: Parser[Note] = ident ^^ {
-    case i => new Note(i.charAt(0))
+    case i => new Note(i)
   }
 
 

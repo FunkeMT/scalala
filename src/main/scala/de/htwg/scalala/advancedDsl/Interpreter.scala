@@ -1,12 +1,16 @@
 package de.htwg.scalala.advancedDsl
 
-import java.io.File
-
+import de.htwg.scalala.music.{Instrument => MidiInstrument}
 import de.htwg.scalala.midi.MidiFile
+
+import scala.collection.mutable.ListBuffer
 
 class Interpreter(song: Song) {
 
   val midiFile: MidiFile = new MidiFile()
+
+  // Loop Map
+  var loopListBuff = ListBuffer[(NoteElements, MidiInstrument)]()
 
   def run(): Unit = {
     walk(song.statements)
@@ -20,6 +24,7 @@ class Interpreter(song: Song) {
 
   }
 
+
   private def addMusician(musician: Musician, position: Int) = {
     val instr = musician.instrument.instrument
 
@@ -29,21 +34,37 @@ class Interpreter(song: Song) {
       position
     )
 
-    if (musician.musicElement.isInstanceOf[NoteElements]) {
-      val noteElements = musician.musicElement.asInstanceOf[NoteElements]
-
-      noteElements.elements.foreach(el => {
-        if (el.isInstanceOf[Note]) {
-          val note = el.asInstanceOf[Note]
-          midiFile.addKey(note.note, instr.channelID)
-        }
-
-        if (el.isInstanceOf[Chord]) {
-          val chord = el.asInstanceOf[Chord]
-          midiFile.addChord(chord.notes.map(_.note), instr.channelID)
-        }
-      })
+    musician.musicElement match {
+      case noteElements: NoteElements => {
+        addNoteElements(noteElements, instr)
+      }
+      case loopElement: LoopElement => {
+        loopListBuff.append((loopElement.noteElements, instr))
+      }
     }
+  }
+
+  private def addLoopElements() = {
+    val maxTick = midiFile.tickMap.maxBy(_._2)._2
+
+    loopListBuff.toList.foreach(elem => {
+      // start from track begin
+      midiFile.changeToInstrument(elem._2.instrumentID, elem._2.channelID, 0)
+
+      while (midiFile.tickMap(elem._2.channelID) <= maxTick) {
+        addNoteElements(elem._1, elem._2)
+      }
+    })
+  }
+
+  private def addNoteElements(noteElements: NoteElements, instrument: MidiInstrument) = {
+    noteElements.elements.foreach(el => {
+      el match {
+        case note: Note => midiFile.addKey(note.note, instrument.channelID)
+        case chord: Chord => midiFile.addChord(chord.notes.map(_.note), instrument.channelID)
+        case _ => sys.error("Error: Undefined identifier '" + el + "' being called")
+      }
+    })
   }
 
 
@@ -70,6 +91,7 @@ class Interpreter(song: Song) {
               case None => sysError(tree, musicVar.identifier)
             }
           }
+          addLoopElements()
 
 
 
