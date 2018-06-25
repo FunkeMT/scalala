@@ -15,10 +15,8 @@ class Reader extends StandardTokenParsers {
     "PLAY",
     "PLAYS",
     "TEMPO",
-    "AT"
-  )
+    "AT")
   lexical.delimiters += (",", "(", ")")
-
 
   def song: Parser[Song] = rep(track | musician) ^^ {
     s => new Song(s)
@@ -26,7 +24,7 @@ class Reader extends StandardTokenParsers {
 
   def track: Parser[Track] = "PLAY" ~ musicVars ~ opt(tempo) ^^ {
     case p ~ m ~ None => new Track(m)
-    case p ~ m ~ t    => new Track(m, t.get)
+    case p ~ m ~ t => new Track(m, t.get)
   }
 
   def tempo: Parser[Int] = "WITH" ~> "TEMPO" ~> numericLit ^^ {
@@ -39,16 +37,12 @@ class Reader extends StandardTokenParsers {
 
   def musicVar: Parser[MusicVar] = ident ~ opt(playAt) ^^ {
     case i ~ None => new MusicVar(i)
-    case i ~ a    => new MusicVar(i, a.get)
+    case i ~ a => new MusicVar(i, a.get)
   }
 
   def playAt: Parser[Int] = "AT" ~> numericLit ^^ {
     n => n.toInt
   }
-
-
-
-
 
   def musician: Parser[Musician] = ("MUSICIAN" ~> ident) ~ ("INSTRUMENT" ~> instrument) ~ ("PLAYS" ~> (loopElements | noteElements)) ^^ {
     case m ~ i ~ e => new Musician(m, i, e)
@@ -58,8 +52,6 @@ class Reader extends StandardTokenParsers {
     case i => new Instrument(i)
   }
 
-
-
   def noteElements: Parser[NoteElements] = repsep(noteElement, ",") ^^ {
     case e => new NoteElements(e)
   }
@@ -68,13 +60,9 @@ class Reader extends StandardTokenParsers {
     e => e
   }
 
-
-  
   def loopElements: Parser[LoopElement] = ("LOOP" ~> "(") ~> noteElements <~ ")" ^^ {
     case l => new LoopElement(l)
   }
-
-
 
   def chord: Parser[Chord] = ("CHORD" ~> "(") ~> repsep(note, ",") <~ ")" ^^ {
     case n => new Chord(n)
@@ -83,8 +71,6 @@ class Reader extends StandardTokenParsers {
   def note: Parser[Note] = ident ^^ {
     case i => new Note(i)
   }
-
-
 
   def parseAll[T](p: Parser[T], in: String): ParseResult[T] = {
     phrase(p)(new lexical.Scanner(in))

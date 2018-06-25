@@ -1,7 +1,5 @@
 package de.htwg.scalala.advancedDsl
 
-import de.htwg.scalala.simpledsl.Interpreter
-
 object Main {
   def main(args: Array[String]) {
 

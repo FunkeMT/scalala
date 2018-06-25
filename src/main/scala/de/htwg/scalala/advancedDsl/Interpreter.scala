@@ -1,6 +1,8 @@
 package de.htwg.scalala.advancedDsl
 
-import de.htwg.scalala.music.{Instrument => MidiInstrument}
+import java.io.File
+
+import de.htwg.scalala.music.{ Instrument => MidiInstrument }
 import de.htwg.scalala.midi.MidiFile
 
 import scala.collection.mutable.ListBuffer
@@ -12,7 +14,7 @@ class Interpreter(song: Song) {
   // Loop Map
   var loopListBuff = ListBuffer[(NoteElements, MidiInstrument)]()
 
-  def run(): Unit = {
+  def run(): File = {
     walk(song.statements)
     midiFile.finalFile()
     midiFile.saveFile()
@@ -20,10 +22,7 @@ class Interpreter(song: Song) {
 
   private def addTrack(track: Track): Unit = {
 
-
-
   }
-
 
   private def addMusician(musician: Musician, position: Int) = {
     val instr = musician.instrument.instrument
@@ -67,12 +66,9 @@ class Interpreter(song: Song) {
     })
   }
 
-
-
   private def sysError(tree: List[Statement], identifier: String) = {
     sys.error("Error: Undefined identifier '" + identifier + "' being called at position [" + tree.head.pos.column + "] on line: " + tree.head.pos.line)
   }
-
 
   private def walk(tree: List[Statement]) {
     if (!tree.isEmpty) {
@@ -84,7 +80,6 @@ class Interpreter(song: Song) {
 
           midiFile.setTempo(track.tempo)
 
-
           for (musicVar <- track.musicVars) {
             song.musician.get(musicVar.identifier) match {
               case Some(value) => addMusician(value, musicVar.position)
@@ -92,8 +87,6 @@ class Interpreter(song: Song) {
             }
           }
           addLoopElements()
-
-
 
           walk(tree.tail)
         }

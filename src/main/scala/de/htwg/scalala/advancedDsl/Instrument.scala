@@ -1,6 +1,6 @@
 package de.htwg.scalala.advancedDsl
 
-import de.htwg.scalala.music.{ Instrument => MidiInstrument}
+import de.htwg.scalala.music.{ Instrument => MidiInstrument }
 
 case class Instrument(name: String) {
   val instruments = Map[String, MidiInstrument](
