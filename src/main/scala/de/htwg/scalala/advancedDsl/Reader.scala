@@ -4,30 +4,28 @@ import scala.language.postfixOps
 import scala.util.parsing.combinator.syntactical._
 
 class Reader extends StandardTokenParsers {
-  lexical.reserved += ("LOOP",
-    "PATTERN",
-    "CHORD",
-    "NOTES",
-    "INSTRUMENT",
-    "MUSICIAN",
-    "TOGETHER",
-    "WITH",
-    "PLAY",
-    "PLAYS",
-    "TEMPO",
-    "AT")
+  lexical.reserved += ("loop",
+    "chord",
+    "notes",
+    "instrument",
+    "musician",
+    "with",
+    "play",
+    "plays",
+    "tempo",
+    "at")
   lexical.delimiters += (",", "(", ")")
 
   def song: Parser[Song] = rep(track | musician) ^^ {
     s => new Song(s)
   }
 
-  def track: Parser[Track] = "PLAY" ~ musicVars ~ opt(tempo) ^^ {
-    case p ~ m ~ None => new Track(m)
-    case p ~ m ~ t => new Track(m, t.get)
+  def track: Parser[Track] = "play" ~ opt(tempo) ~ musicVars ^^ {
+    case p ~ None ~ m => new Track(m)
+    case p ~ t ~ m => new Track(m, t.get)
   }
 
-  def tempo: Parser[Int] = "WITH" ~> "TEMPO" ~> numericLit ^^ {
+  def tempo: Parser[Int] = "with" ~> "tempo" ~> numericLit ^^ {
     n => n.toInt
   }
 
@@ -40,11 +38,11 @@ class Reader extends StandardTokenParsers {
     case i ~ a => new MusicVar(i, a.get)
   }
 
-  def playAt: Parser[Int] = "AT" ~> numericLit ^^ {
+  def playAt: Parser[Int] = "at" ~> numericLit ^^ {
     n => n.toInt
   }
 
-  def musician: Parser[Musician] = ("MUSICIAN" ~> ident) ~ ("INSTRUMENT" ~> instrument) ~ ("PLAYS" ~> (loopElements | noteElements)) ^^ {
+  def musician: Parser[Musician] = ("musician" ~> ident) ~ ("instrument" ~> instrument) ~ ("plays" ~> (loopElements | noteElements)) ^^ {
     case m ~ i ~ e => new Musician(m, i, e)
   }
 
@@ -60,11 +58,11 @@ class Reader extends StandardTokenParsers {
     e => e
   }
 
-  def loopElements: Parser[LoopElement] = ("LOOP" ~> "(") ~> noteElements <~ ")" ^^ {
+  def loopElements: Parser[LoopElement] = ("loop" ~> "(") ~> noteElements <~ ")" ^^ {
     case l => new LoopElement(l)
   }
 
-  def chord: Parser[Chord] = ("CHORD" ~> "(") ~> repsep(note, ",") <~ ")" ^^ {
+  def chord: Parser[Chord] = ("chord" ~> "(") ~> repsep(note, ",") <~ ")" ^^ {
     case n => new Chord(n)
   }
 
