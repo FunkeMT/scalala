@@ -1,8 +1,11 @@
 package de.htwg.scalala.midi
 
 import de.htwg.scalala.music._
+import org.junit.runner.RunWith
 import org.scalatest.FunSuite
+import org.scalatest.junit.JUnitRunner
 
+@RunWith(classOf[JUnitRunner])
 class MidiFileTest extends FunSuite {
 
   test("testSaveFile") {
