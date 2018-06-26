@@ -2,24 +2,16 @@
 package de.htwg.scalala.midi
 
 import de.htwg.scalala.music.{ Context, Key }
-import javax.sound.midi.MidiSystem
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 case class MidiPlayer(instrumentID: Int = 0, channelID: Int = 0) {
 
-  val synthesizer = MidiSystem.getSynthesizer
-  synthesizer.open
-  val channels = synthesizer.getChannels
-  val channel = channels.apply(channelID)
   changeToInstrument(instrumentID)
 
   def play(key: Int = 60, duration: FiniteDuration = 800 milliseconds, volume: Int = Context.volume): Unit = {
-
-    channel.noteOn(key, volume)
-    Thread.sleep(duration.toMillis)
-    channel.noteOff(key, volume)
+    // function deactivated
   }
   def play(set: Set[Key], volume: Int): Unit = {
     val duration = set.head.duration
@@ -29,15 +21,15 @@ case class MidiPlayer(instrumentID: Int = 0, channelID: Int = 0) {
   }
 
   def start(key: Int, volume: Int = 75): Unit = {
-    channel.noteOn(key, volume)
+    // function deactivated
   }
 
   def stop(key: Int, volume: Int = 75): Unit = {
-    channel.noteOff(key, volume)
+    // function deactivated
   }
 
   def changeToInstrument(instrumentID: Int = 0) = {
-    channel.programChange(instrumentID)
+    // function deactivated
   }
 
 }

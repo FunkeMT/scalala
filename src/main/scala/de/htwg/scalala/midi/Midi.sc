@@ -1,6 +1,4 @@
 import java.net.URL
-import de.htwg.scalala.midi.{ MidiPlayer }
-import javax.sound.midi.{ MidiSystem, Receiver }
 import javax.sound.sampled.{ AudioInputStream, LineEvent, LineListener, AudioSystem }
 import java.io.File
 import de.htwg.scalala.music.Context
