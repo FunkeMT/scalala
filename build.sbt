@@ -1,10 +1,14 @@
 name          := "scalala"
-organization  := "de.htwg"
-version       := "0.0.1-SNAPSHOT"
+organization  := "com.github.funkemt"
+version       := "0.1"
 scalaVersion  := "2.11.8"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
 fork in Test := true
+
+bintrayRepository := "maven"
+bintrayOrganization := None
+licenses := Seq("MIT" -> url("http://www.opensource.org/licenses/mit-license.html"))
 
 resolvers += Resolver.jcenterRepo
 
