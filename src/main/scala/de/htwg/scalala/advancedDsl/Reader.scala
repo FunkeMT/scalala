@@ -13,8 +13,12 @@ class Reader extends StandardTokenParsers {
     "play",
     "plays",
     "tempo",
-    "at")
-  lexical.delimiters += (",", "(", ")")
+    "at",
+    "c" , "d" , "e" , "f" , "g" , "a" , "h",
+    "2", "4", "8", "16",
+    "sharp", "flat", "dot"
+  )
+  lexical.delimiters += (",", "(", ")", "/", ".", "+", "-")
 
 
   def song: Parser[Song] = rep(musician | track) ^^ {
@@ -73,8 +77,8 @@ class Reader extends StandardTokenParsers {
 
 
 
-  def note: Parser[Note] = ident ^^ {
-    case i => new Note(i)
+  def note: Parser[Note] = opt(octave) ~ ("c" | "d" | "e" | "f" | "g" | "a" | "h") ~ opt("." ~> accidental) ~ opt("/" ~> duration) ^^ {
+    case o ~ n ~ a ~ d => new Note(n, a.getOrElse(""), d.getOrElse(0), o.getOrElse(""))
   }
 
   def chord: Parser[Chord] = ("chord" ~> "(") ~> repsep(note, ",") <~ ")" ^^ {
@@ -83,7 +87,21 @@ class Reader extends StandardTokenParsers {
 
 
 
-  
+  def octave: Parser[String] = ("+" | "-") ^^ {
+    o => o
+  }
+
+  def accidental: Parser[String] = ("sharp" | "flat" | "dot") ^^ {
+    a => a
+  }
+
+  def duration: Parser[Int] = numericLit ^^ {
+    d => d.toInt
+  }
+
+
+
+
   def parseAll[T](p: Parser[T], in: String): ParseResult[T] = {
     phrase(p)(new lexical.Scanner(in))
   }
