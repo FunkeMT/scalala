@@ -78,7 +78,7 @@ class Reader extends StandardTokenParsers {
 
 
   def note: Parser[Note] = opt(octave) ~ ("c" | "d" | "e" | "f" | "g" | "a" | "h") ~ opt("." ~> accidental) ~ opt("/" ~> duration) ^^ {
-    case o ~ n ~ a ~ d => new Note(n, a.getOrElse(""), d.getOrElse(0), o.getOrElse(""))
+    case o ~ n ~ a ~ d => new Note(n, a.getOrElse(""), d.getOrElse(0), o.getOrElse(List[String]()))
   }
 
   def chord: Parser[Chord] = ("chord" ~> "(") ~> repsep(note, ",") <~ ")" ^^ {
@@ -87,7 +87,7 @@ class Reader extends StandardTokenParsers {
 
 
 
-  def octave: Parser[String] = ("+" | "-") ^^ {
+  def octave: Parser[List[String]] = rep("+" | "-") ^^ {
     o => o
   }
 
