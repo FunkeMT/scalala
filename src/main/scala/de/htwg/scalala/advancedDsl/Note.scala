@@ -10,7 +10,8 @@ case class Note(name: String) extends NoteElement {
     "f" -> Key(midiNumber = 65),
     "g" -> Key(midiNumber = 67),
     "a" -> Key(midiNumber = 69),
-    "b" -> Key(midiNumber = 71),
+    "h" -> Key(midiNumber = 71),
+
     "HiHatClosed" -> Key(midiNumber = 42),
     "HiHatPedal" -> Key(midiNumber = 44),
     "HiHatOpen" -> Key(midiNumber = 46)
