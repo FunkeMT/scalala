@@ -2,7 +2,7 @@ package de.htwg.scalala.midi
 
 import java.io.File
 
-import de.htwg.scalala.music.{Key, Instrument}
+import de.htwg.scalala.music.{ Key, Instrument }
 import javax.sound.midi._
 
 class MidiFile() {
@@ -15,7 +15,7 @@ class MidiFile() {
   val NoteOFF = 0x80
 
   // Tick Counter
-  var lastTick = 1
+  var lastTick: Long = 1
 
   //**** Create a new Sequence
   val sequence = new Sequence(javax.sound.midi.Sequence.PPQ, 24)
@@ -58,7 +58,7 @@ class MidiFile() {
     track.add(me)
   }
 
-  def changeToInstrument(instrument: Instrument, pos: Int = 1): Boolean = {
+  def changeToInstrument(instrument: Instrument, pos: Long = 1L): Boolean = {
     //****  set instrument  ****
     mm = new ShortMessage
     mm.setMessage(instrument.channelID + 0xC0, instrument.instrumentID, 0x00)
@@ -66,8 +66,7 @@ class MidiFile() {
     track.add(me)
   }
 
-
-  def addKey(key: Key, channel: Int, pos: Int = 0): Unit = {
+  def addKey(key: Key, channel: Int, pos: Long = 0): Unit = {
     require(channel >= 0 && channel <= 15)
 
     //****  note on  ****
@@ -76,7 +75,7 @@ class MidiFile() {
     me = new MidiEvent(mm, pos)
     track.add(me)
 
-    val tickEnd = pos + key.ticks
+    val tickEnd: Long = pos + key.ticks.toLong
 
     //****  note off  ****
     mm = new ShortMessage
@@ -93,6 +92,7 @@ class MidiFile() {
     mt = new MetaMessage
     val bet = Array[Byte]() // empty array
     mt.setMessage(0x2F, bet, 0)
+    println("LastTick = " + (lastTick + 1))
     me = new MidiEvent(mt, lastTick + 1)
     track.add(me)
   }

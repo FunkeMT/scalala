@@ -15,7 +15,7 @@ class Interpreter(song: Song) {
   var loopListBuff = ListBuffer[Musician]()
 
   // Local Tick Map
-  var tickMap = collection.mutable.Map[String, Int]().withDefaultValue(1)
+  var tickMap = collection.mutable.Map[String, Long]().withDefaultValue(1)
 
   def run(): File = {
     walk(song.musicians)
@@ -24,17 +24,16 @@ class Interpreter(song: Song) {
     midiFile.saveFile()
   }
 
-  private def addMusician(musician: Musician, position: Int) = {
+  private def addMusician(musician: Musician, position: Long) = {
     val instr = musician.instrument.instrument
     tickMap += (musician.identifier -> position)
 
-    midiFile.changeToInstrument(
-        instr,
-        position
-    )
-
     musician.musicElement match {
       case noteElements: NoteElements => {
+        midiFile.changeToInstrument(
+          instr,
+          position
+        )
         addNoteElements(musician.identifier, noteElements, instr)
       }
       case loopElement: LoopElement => {

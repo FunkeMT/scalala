@@ -68,7 +68,6 @@ class Reader extends StandardTokenParsers {
     case n => new Chord(n)
   }
 
-
   def track: Parser[Track] = "play" ~ opt(tempo) ~ musicVars ^^ {
     case p ~ None ~ m => new Track(m)
     case p ~ t ~ m => new Track(m, t.get)
@@ -87,10 +86,9 @@ class Reader extends StandardTokenParsers {
     case i ~ a => new MusicVar(i, a.get)
   }
 
-  def playAt: Parser[Int] = "at" ~> numericLit ^^ {
-    n => n.toInt
+  def playAt: Parser[Long] = "at" ~> numericLit ^^ {
+    n => n.toLong
   }
-
 
   def parseAll[T](p: Parser[T], in: String): ParseResult[T] = {
     phrase(p)(new lexical.Scanner(in))
