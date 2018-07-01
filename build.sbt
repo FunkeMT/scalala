@@ -1,6 +1,6 @@
 name          := "scalala"
 organization  := "com.github.funkemt"
-version       := "0.1"
+version       := "0.2"
 scalaVersion  := "2.11.8"
 scalacOptions := Seq("-unchecked", "-feature", "-deprecation", "-encoding", "utf8")
 
