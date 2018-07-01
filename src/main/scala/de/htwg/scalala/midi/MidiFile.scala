@@ -2,10 +2,10 @@ package de.htwg.scalala.midi
 
 import java.io.File
 
-import de.htwg.scalala.music.Key
+import de.htwg.scalala.music.{Key, Instrument}
 import javax.sound.midi._
 
-class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
+class MidiFile() {
 
   // DEFAULT VALUES
   val TempoBPM = 120
@@ -15,7 +15,7 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
   val NoteOFF = 0x80
 
   // Tick Counter
-  var tickMap = collection.mutable.Map[Int, Long]().withDefaultValue(1)
+  var lastTick = 1
 
   //**** Create a new Sequence
   val sequence = new Sequence(javax.sound.midi.Sequence.PPQ, 24)
@@ -58,49 +58,33 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
     track.add(me)
   }
 
-  def changeToInstrument(instrumentID: Int = 0, channel: Int = 0, pos: Int = 0): Boolean = {
-    //****  set tick position  ****
-    if (pos != 0) {
-      tickMap += (channel -> pos)
-    }
+  def changeToInstrument(instrument: Instrument, pos: Int = 1): Boolean = {
     //****  set instrument  ****
     mm = new ShortMessage
-    mm.setMessage(channel + 0xC0, instrumentID, 0x00)
-    me = new MidiEvent(mm, tickMap(channel))
+    mm.setMessage(instrument.channelID + 0xC0, instrument.instrumentID, 0x00)
+    me = new MidiEvent(mm, pos)
     track.add(me)
   }
 
-  def addChord(keys: List[Key], channel: Int = 0): Unit = {
-    keys.foreach(addKey(_, channel, true))
-  }
 
-  def addKey(key: Key, channel: Int = 0): Unit = {
-    addKey(key, channel, false)
-  }
-
-  private def addKey(key: Key, channel: Int, isChord: Boolean): Unit = {
+  def addKey(key: Key, channel: Int, pos: Int = 0): Unit = {
     require(channel >= 0 && channel <= 15)
 
     //****  note on  ****
     mm = new ShortMessage
     mm.setMessage(NoteON + channel, key.midiNumber, 0x60)
-    me = new MidiEvent(mm, tickMap(channel))
+    me = new MidiEvent(mm, pos)
     track.add(me)
 
-    //println(s"1) channel: $channel | ${tickMap(channel)}")
-    tickMap(channel) += key.ticks
-    //println(s"2) channel: $channel | ${tickMap(channel)}")
+    val tickEnd = pos + key.ticks
 
     //****  note off  ****
     mm = new ShortMessage
     mm.setMessage(NoteOFF + channel, key.midiNumber, 0x40)
-    me = new MidiEvent(mm, tickMap(channel))
+    me = new MidiEvent(mm, tickEnd)
     track.add(me)
 
-    if (isChord) {
-      // jump back to tick origin to play chords in sync
-      tickMap(channel) -= key.ticks
-    }
+    lastTick = if (tickEnd > lastTick) tickEnd else lastTick
   }
 
   def finalFile(): Unit = {
@@ -109,7 +93,7 @@ class MidiFile(instrumentID: Int = 0, channelID: Int = 0) {
     mt = new MetaMessage
     val bet = Array[Byte]() // empty array
     mt.setMessage(0x2F, bet, 0)
-    me = new MidiEvent(mt, tickMap.max._2)
+    me = new MidiEvent(mt, lastTick + 1)
     track.add(me)
   }
 

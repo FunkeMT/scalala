@@ -19,7 +19,7 @@ class Interpreter(song: Song) {
       tree.head match {
         case Line(instrument, notes) => {
           println("Instrument: " + instrument)
-          midiFile.changeToInstrument(instrument.instrument.instrumentID, instrument.instrument.channelID)
+          midiFile.changeToInstrument(instrument.instrument, instrument.instrument.channelID)
 
           println("Notes:" + notes)
           notes.foreach(note => midiFile.addKey(note.note, instrument.instrument.channelID))

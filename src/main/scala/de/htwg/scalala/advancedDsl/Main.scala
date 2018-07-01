@@ -6,16 +6,20 @@ object Main {
     val in =
       """musician piano_1
         |  instrument Piano
-        |  plays d,e,f,g,d,e,f,g,d,e,f,g,a,b,d,e,f,c
+        |  plays d,e,f,g,d,e,f,g,d,e,f,g,a,h,d,e,f,c
         |
         |musician marimba_1
         |  instrument Marimba
-        |  plays chord(c,d,e)
+        |  plays loop(c)
+        |
+        |musician drummer
+        |  instrument Drum
+        |  plays loop(HiHatClosed)
         |
         |play with tempo 50
         |  piano_1,
-        |  marimba_1 at 12,
-        |  marimba_1 at 7
+        |  marimba_1,
+        |  drummer
       """.stripMargin
 
     val in2 =
@@ -41,7 +45,7 @@ object Main {
         |   piano_1
       """.stripMargin
 
-    parse(in3)
+    parse(in)
     //autoComplete(in3)
   }
 

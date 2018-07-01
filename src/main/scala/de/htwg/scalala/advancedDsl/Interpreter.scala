@@ -12,55 +12,61 @@ class Interpreter(song: Song) {
   val midiFile: MidiFile = new MidiFile()
 
   // Loop Map
-  var loopListBuff = ListBuffer[(NoteElements, MidiInstrument)]()
+  var loopListBuff = ListBuffer[Musician]()
+
+  // Local Tick Map
+  var tickMap = collection.mutable.Map[String, Int]().withDefaultValue(1)
 
   def run(): File = {
-    walk(song.statements)
+    walk(song.musicians)
+    walk(List[Statement](song.track))
     midiFile.finalFile()
     midiFile.saveFile()
   }
 
-  private def addTrack(track: Track): Unit = {
-
-  }
-
   private def addMusician(musician: Musician, position: Int) = {
     val instr = musician.instrument.instrument
+    tickMap += (musician.identifier -> position)
 
     midiFile.changeToInstrument(
-      instr.instrumentID,
-      instr.channelID,
-      position
+        instr,
+        position
     )
 
     musician.musicElement match {
       case noteElements: NoteElements => {
-        addNoteElements(noteElements, instr)
+        addNoteElements(musician.identifier, noteElements, instr)
       }
       case loopElement: LoopElement => {
-        loopListBuff.append((loopElement.noteElements, instr))
+        loopListBuff.append(musician)
       }
     }
   }
 
   private def addLoopElements() = {
-    val maxTick = midiFile.tickMap.maxBy(_._2)._2
+    val maxTick = tickMap.maxBy(_._2)._2
 
     loopListBuff.toList.foreach(elem => {
       // start from track begin
-      midiFile.changeToInstrument(elem._2.instrumentID, elem._2.channelID, 0)
+      midiFile.changeToInstrument(elem.instrument.instrument, 0)
 
-      while (midiFile.tickMap(elem._2.channelID) <= maxTick) {
-        addNoteElements(elem._1, elem._2)
+      while (tickMap(elem.identifier) < maxTick) {
+        addNoteElements(elem.identifier, elem.musicElement.asInstanceOf[LoopElement].noteElements, elem.instrument.instrument)
       }
     })
   }
 
-  private def addNoteElements(noteElements: NoteElements, instrument: MidiInstrument) = {
+  private def addNoteElements(identifier: String, noteElements: NoteElements, instrument: MidiInstrument) = {
     noteElements.elements.foreach(el => {
+      println("tickMap = " + tickMap)
       el match {
-        case note: Note => midiFile.addKey(note.note, instrument.channelID)
-        case chord: Chord => midiFile.addChord(chord.notes.map(_.note), instrument.channelID)
+        case note: Note => {
+          midiFile.addKey(note.note, instrument.channelID, tickMap.getOrElse(identifier, 1))
+          tickMap(identifier) += note.note.ticks
+        }
+        case chord: Chord => {
+          chord.notes.map(_.note).foreach(midiFile.addKey(_, instrument.channelID, tickMap.getOrElse(identifier, 1)))
+        }
         case _ => sys.error("Error: Undefined identifier '" + el + "' being called")
       }
     })
