@@ -57,7 +57,6 @@ class Interpreter(song: Song) {
 
   private def addNoteElements(identifier: String, noteElements: NoteElements, instrument: MidiInstrument) = {
     noteElements.elements.foreach(el => {
-      println("tickMap = " + tickMap)
       el match {
         case note: Note => {
           midiFile.addKey(note.note, instrument.channelID, tickMap.getOrElse(identifier, 1))
@@ -81,7 +80,6 @@ class Interpreter(song: Song) {
         case track: Track => {
           println("### Track called")
           println(track.musicVars)
-          println(track.tempo)
 
           midiFile.setTempo(track.tempo)
 

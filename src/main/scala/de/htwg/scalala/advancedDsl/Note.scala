@@ -18,8 +18,6 @@ case class Note(name: String, accidental: String = "", duration: Int = 0, octave
   )
 
   val note: Key = {
-    println(accidental)
-    println(octave)
     var n = accidental match {
       case "sharp" => notes.get(name).get.sharp
       case "flat" => notes.get(name).get.flat
