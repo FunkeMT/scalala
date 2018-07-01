@@ -30,6 +30,6 @@ case class Note(name: String, accidental: String = "", duration: Int = 0, octave
       case "+" => n = n +
       case "-" => n = n -
     }
-    n.ticks(if (duration > 0) 16/duration else 16)
+    n.ticks(if (duration > 0) 16 / duration else 16)
   }
 }

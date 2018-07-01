@@ -14,18 +14,14 @@ class Reader extends StandardTokenParsers {
     "plays",
     "tempo",
     "at",
-    "c" , "d" , "e" , "f" , "g" , "a" , "h",
+    "c", "d", "e", "f", "g", "a", "h",
     "2", "4", "8", "16",
-    "sharp", "flat", "dot"
-  )
+    "sharp", "flat", "dot")
   lexical.delimiters += (",", "(", ")", "/", ".", "+", "-")
-
 
   def song: Parser[Song] = rep(musician | track) ^^ {
     s => new Song(s)
   }
-
-
 
   def musician: Parser[Musician] = ("musician" ~> ident) ~ ("instrument" ~> instrument) ~ ("plays" ~> (loopElements | noteElements)) ^^ {
     case m ~ i ~ e => new Musician(m, i, e)
@@ -35,8 +31,6 @@ class Reader extends StandardTokenParsers {
     case p ~ None ~ m => new Track(m)
     case p ~ t ~ m => new Track(m, t.get)
   }
-
-
 
   def instrument: Parser[Instrument] = ident ^^ {
     case i => new Instrument(i)
@@ -50,8 +44,6 @@ class Reader extends StandardTokenParsers {
     case l => new LoopElement(l)
   }
 
-
-
   def tempo: Parser[Int] = "with" ~> "tempo" ~> numericLit ^^ {
     n => n.toInt
   }
@@ -59,8 +51,6 @@ class Reader extends StandardTokenParsers {
   def musicVars: Parser[List[MusicVar]] = repsep(musicVar, ",") ^^ {
     m => m
   }
-
-
 
   def noteElement: Parser[NoteElement] = chord | note ^^ {
     e => e
@@ -75,8 +65,6 @@ class Reader extends StandardTokenParsers {
     n => n.toInt
   }
 
-
-
   def note: Parser[Note] = opt(octave) ~ ("c" | "d" | "e" | "f" | "g" | "a" | "h") ~ opt("." ~> accidental) ~ opt("/" ~> duration) ^^ {
     case o ~ n ~ a ~ d => new Note(n, a.getOrElse(""), d.getOrElse(0), o.getOrElse(List[String]()))
   }
@@ -84,8 +72,6 @@ class Reader extends StandardTokenParsers {
   def chord: Parser[Chord] = ("chord" ~> "(") ~> repsep(note, ",") <~ ")" ^^ {
     case n => new Chord(n)
   }
-
-
 
   def octave: Parser[List[String]] = rep("+" | "-") ^^ {
     o => o
@@ -98,9 +84,6 @@ class Reader extends StandardTokenParsers {
   def duration: Parser[Int] = numericLit ^^ {
     d => d.toInt
   }
-
-
-
 
   def parseAll[T](p: Parser[T], in: String): ParseResult[T] = {
     phrase(p)(new lexical.Scanner(in))
