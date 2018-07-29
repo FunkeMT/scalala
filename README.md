@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/FunkeMT/scalala.svg?branch=master)](https://travis-ci.org/FunkeMT/scalala)
-
 # Scalala
+
+[![Build Status](https://travis-ci.org/FunkeMT/scalala.svg?branch=master)](https://travis-ci.org/FunkeMT/scalala)
 
 A Domain-Specific Language and web-based Interpreter for Music Notation.
 
