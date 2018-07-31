@@ -1,12 +1,23 @@
+# Scalala
+
 [![Build Status](https://travis-ci.org/FunkeMT/scalala.svg?branch=master)](https://travis-ci.org/FunkeMT/scalala)
 
-htwg-scala-seed
-=========================
+A Domain-Specific Language and web-based Interpreter for Music Notation.
 
-This is a seed project to create a basic scala project as used in the
-class Software Engineering at the University of Applied Science HTWG Konstanz
+> see Main Application _ScalalaKata_
+>
+> [https://github.com/FunkeMT/ScalalaKata](https://github.com/FunkeMT/ScalalaKata)
 
-* Has a folder structure prepared for a MVC-style application
-* Has *ScalaTest* and *ScalaMock* at their latest versions as dependencies.
-* Has *sbt-scalariform*, *sbt-scapegoat*, *scalastyle-sbt-plugin* and *sbt-scoverage* sbt plugins
-* Has .gitignore defaults
+### Usage via sbt
+```
+...
+resolvers ++= Seq(
+    "funkemt" at "http://dl.bintray.com/content/funkemt/maven"
+  ),
+libraryDependencies += "com.github.funkemt" % "scalala_2.11" % "0.2.2"
+...
+```
+
+### Based On
+
+- [scalala](https://github.com/markoboger/scalala)
