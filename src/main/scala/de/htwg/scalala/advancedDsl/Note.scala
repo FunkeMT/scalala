@@ -14,7 +14,23 @@ case class Note(name: String, accidental: String = "", duration: Int = 0, octave
 
     "HiHatClosed" -> Key(midiNumber = 42),
     "HiHatPedal" -> Key(midiNumber = 44),
-    "HiHatOpen" -> Key(midiNumber = 46)
+    "HiHatOpen" -> Key(midiNumber = 46),
+
+    "TomLowFloor" -> Key(midiNumber = 41),
+    "TomHighFloor" -> Key(midiNumber = 43),
+    "TomLow" -> Key(midiNumber = 45),
+    "TomLowMid" -> Key(midiNumber = 47),
+    "TomHiMid" -> Key(midiNumber = 48),
+    "TomHigh" -> Key(midiNumber = 50),
+
+    "DrumAcousticBass" -> Key(midiNumber = 35),
+    "DrumBass" -> Key(midiNumber = 36),
+
+    "SnareAcoustic" -> Key(midiNumber = 38),
+    "SnareElectric" -> Key(midiNumber = 40),
+
+    "SideStick" -> Key(midiNumber = 37),
+    "HandClap" -> Key(midiNumber = 39)
   )
 
   val note: Key = {

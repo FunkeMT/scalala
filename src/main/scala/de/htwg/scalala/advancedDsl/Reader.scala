@@ -17,7 +17,9 @@ class Reader extends StandardTokenParsers {
     "c", "d", "e", "f", "g", "a", "h",
     "2", "4", "8", "16",
     "sharp", "flat", "dot",
-    "HiHatClosed")
+    "HiHatClosed", "HiHatPedal", "HiHatOpen",
+    "TomLowFloor", "TomHighFloor", "TomLow", "TomLowMid", "TomHiMid", "TomHigh", "DrumAcousticBass",
+    "DrumBass", "SnareAcoustic", "SnareElectric", "SideStick", "HandClap")
   lexical.delimiters += (",", "(", ")", "/", ".", "+", "-")
 
   def song: Parser[Song] = rep(musician) ~ track ^^ {
@@ -48,9 +50,15 @@ class Reader extends StandardTokenParsers {
     e => e
   }
 
-  def note: Parser[Note] = opt(octave) ~ ("c" | "d" | "e" | "f" | "g" | "a" | "h" | "HiHatClosed") ~ opt("." ~> accidental) ~ opt("/" ~> duration) ^^ {
-    case o ~ n ~ a ~ d => new Note(n, a.getOrElse(""), d.getOrElse(0), o.getOrElse(List[String]()))
-  }
+  def note: Parser[Note] = opt(octave) ~ (
+    "c" | "d" | "e" | "f" | "g" | "a" | "h" |
+    "HiHatClosed" | "HiHatPedal" | "HiHatOpen" |
+    "TomLowFloor" | "TomHighFloor" | "TomLow" | "TomLowMid" | "TomHiMid" | "TomHigh" | "DrumAcousticBass" |
+    "DrumBass" | "SnareAcoustic" | "SnareElectric" |
+    "SideStick" | "HandClap"
+  ) ~ opt("." ~> accidental) ~ opt("/" ~> duration) ^^ {
+      case o ~ n ~ a ~ d => new Note(n, a.getOrElse(""), d.getOrElse(0), o.getOrElse(List[String]()))
+    }
 
   def octave: Parser[List[String]] = rep("+" | "-") ^^ {
     o => o
